@@ -1,0 +1,15 @@
+.btn-fechar {
+  border: none;
+  border-radius: 10px;
+  padding: 15px 40px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s;
+}
+
+.btn-fechar:hover {
+  filter: brightness(0.9);
+}

@@ -1,0 +1,19 @@
+.input-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+}
+
+.rounded-input {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.rounded-input:focus {
+  border-color: #007bff;
+}

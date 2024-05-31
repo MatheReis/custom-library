@@ -1,0 +1,12 @@
+<header [style.backgroundColor]="bgColor">
+  <div class="container">
+    <img [src]="icon" alt="Logo" class="logo" *ngIf="icon">
+    <nav>
+      <ul>
+        <li *ngFor="let item of navItems">
+          <a [href]="item.href">{{ item.label }}</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>

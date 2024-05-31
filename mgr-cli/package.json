@@ -1,0 +1,13 @@
+{
+  "name": "mgr-cli",
+  "version": "1.0.0",
+  "description": "CLI personalizado para criar projetos Angular",
+  "main": "mgr-cli.mjs",
+  "bin": {
+    "mgr": "./mgr-cli.mjs"
+  },
+  "type": "module",
+  "dependencies": {
+    "inquirer": "^8.0.0"
+  }
+}
