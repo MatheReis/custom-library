@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'mgr-header',
@@ -6,7 +6,10 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./mgr-header.component.css'],
 })
 export class MgrHeaderComponent {
-  @Input() icon: string | null = null;
-  @Input() bgColor: string = '#333';
-  @Input() navItems: { label: string; href: string }[] = [];
+  logo: string = 'CompanyLogo';
+  navItems: { label: string; href: string; active?: boolean }[] = [
+    { label: 'Home', href: '#home', active: true },
+    { label: 'Contact', href: '#contact' },
+    { label: 'About', href: '#about' }
+  ];
 }

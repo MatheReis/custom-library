@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { MgrComponentModule } from 'mgr-component';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, MgrComponentModule],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  styleUrls: ['./app.component.scss']
 })
-export class AppComponent {}
+export class AppComponent {
+  title = 'my-angular-project';
+}

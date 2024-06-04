@@ -1,8 +1,11 @@
 <div class="input-container">
+  <label *ngIf="title" class="input-title">{{ title }}</label>
   <input
     type="text"
     class="rounded-input"
     [placeholder]="placeholder"
     [style.borderColor]="borderColor"
+    [style.width]="width"
+    [style.borderRadius]="'4px'"
   />
 </div>

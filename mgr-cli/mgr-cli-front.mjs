@@ -13,19 +13,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function main() {
-  const { projectName, includeAuth, includeLogin, installMgrComponent } =
+  const { projectName, includeLogin, installMgrComponent } =
     await inquirer.prompt([
       {
         type: "input",
         name: "projectName",
         message: "Qual o nome do projeto?",
-        default: "projeto",
-      },
-      {
-        type: "confirm",
-        name: "includeAuth",
-        message: "Deseja incluir um módulo de autenticação?",
-        default: true,
+        default: "my-angular-project",
       },
       {
         type: "confirm",
@@ -41,108 +35,39 @@ async function main() {
       },
     ]);
 
-  // Criando pasta do projeto
-  console.log(`Criando pasta do projeto ${projectName}...`);
-  ensureDirSync(projectName);
-
-  // Criando projeto back-end .NET
-  console.log("Criando novo projeto .NET...");
-  execSync(`dotnet new mvc -o ${projectName}-backend`, {
-    stdio: "inherit",
-    cwd: projectName,
-  });
-
-  const backendDir = path.join(
-    process.cwd(),
-    projectName,
-    `${projectName}-backend`
-  );
-
-  const areasDir = path.join(backendDir, "Areas");
-  const servicesDir = path.join(backendDir, "Services");
-  const modelsDir = path.join(backendDir, "Models");
-  const controllersDir = path.join(backendDir, "Controllers");
-
-  const directories = [areasDir, servicesDir, modelsDir, controllersDir];
-
-  directories.forEach((dir) => {
-    ensureDirSync(dir);
-  });
-
-  if (includeAuth) {
-    console.log("Copiando arquivos de autenticação...");
-    const templateDir = path.join(__dirname, "templates", "auth");
-
-    if (fs.existsSync(templateDir)) {
-      copySync(templateDir, areasDir, { overwrite: true });
-    } else {
-      console.log(
-        "O diretório do template de autenticação não foi encontrado. Certifique-se de que o template existe em templates/auth."
-      );
-    }
-  }
-
-  const backendFilesToCopy = [
-    { src: "Startup.cs", dest: "Startup.cs" },
-    { src: "Program.cs", dest: "Program.cs" },
-    { src: "appsettings.json", dest: "appsettings.json" },
-  ];
-
-  backendFilesToCopy.forEach((file) => {
-    const srcFile = path.join(__dirname, "templates", file.src);
-    const destFile = path.join(backendDir, file.dest);
-    if (fs.existsSync(srcFile)) {
-      console.log(`Copiando ${file.src}...`);
-      copySync(srcFile, destFile, { overwrite: true });
-    } else {
-      console.log(
-        `O arquivo ${file.src} não foi encontrado. Certifique-se de que o arquivo existe em templates/auth.`
-      );
-    }
-  });
-
-  console.log("Projeto back-end configurado com sucesso!");
-
-  // Criando projeto front-end Angular
-  console.log("Criando novo projeto Angular...");
+  console.log("Criando novo projeto ModalGR...");
   execSync(
-    `ng new ${projectName}-frontend --no-standalone --routing --ssr=false --style=scss`,
+    `ng new ${projectName} --no-standalone --routing --ssr=false --style=scss`,
     {
       stdio: "inherit",
-      cwd: projectName,
     }
   );
 
-  const frontendDir = path.join(
-    process.cwd(),
-    projectName,
-    `${projectName}-frontend`
-  );
+  process.chdir(path.join(process.cwd(), projectName));
 
   console.log("Configurando o registry e limpando o cache do npm...");
   execSync("npm config set registry https://registry.npmjs.org", {
     stdio: "inherit",
-    cwd: frontendDir,
   });
-  execSync("npm cache clean --force", { stdio: "inherit", cwd: frontendDir });
+  execSync("npm cache clean --force", { stdio: "inherit" });
 
   console.log("Instalando dependências com npm...");
-  execSync("npm install", { stdio: "inherit", cwd: frontendDir });
+  execSync("npm install", { stdio: "inherit" });
 
-  const appDir = path.join(frontendDir, "src", "app");
+  const appDir = path.join(process.cwd(), "src", "app");
   const coreDir = path.join(appDir, "core");
   const modulesDir = path.join(appDir, "modules", "login");
   const pagesDir = path.join(modulesDir, "pages", "login");
   const componentsDir = path.join(pagesDir, "components");
 
-  const frontendDirectories = [
+  const directories = [
     path.join(coreDir, "constants"),
     path.join(coreDir, "services"),
     path.join(coreDir, "utils"),
     componentsDir,
   ];
 
-  frontendDirectories.forEach((dir) => {
+  directories.forEach((dir) => {
     ensureDirSync(dir);
   });
 
@@ -151,7 +76,6 @@ async function main() {
     try {
       execSync("npm install /Users/matheusreis/Documents/studies/mgr-template/template/projects/mgr-component", {
         stdio: "inherit",
-        cwd: frontendDir,
       });
     } catch (error) {
       console.error("Erro ao instalar mgr-component:", error);
@@ -172,14 +96,14 @@ async function main() {
     }
   }
 
-  const frontendFilesToCopy = [
+  const filesToCopy = [
     { src: "app-routing.module.ts", dest: "app-routing.module.ts" },
     { src: "app.module.ts", dest: "app.module.ts" },
     { src: "app.component.ts", dest: "app.component.ts" },
     { src: "app.component.html", dest: "app.component.html" },
   ];
 
-  frontendFilesToCopy.forEach((file) => {
+  filesToCopy.forEach((file) => {
     const srcFile = path.join(__dirname, "templates", file.src);
     const destFile = path.join(appDir, file.dest);
     if (fs.existsSync(srcFile)) {
@@ -192,7 +116,18 @@ async function main() {
     }
   });
 
-  console.log("Projeto front-end configurado com sucesso!");
+  console.log("Projeto configurado com sucesso!");
+
+  // Adicionando os comandos especificados
+  console.log("Linkando o mgr-component...");
+  execSync("npm link mgr-component", { stdio: "inherit" });
+
+  console.log("Configurando o registry do npm...");
+  execSync("npm set registry http://localhost:4873", { stdio: "inherit" });
+
+  console.log("Instalando a versão específica do mgr-component...");
+  execSync("npm install mgr-component@0.0.7 --legacy-peer-deps", { stdio: "inherit" });
+
   console.log("Instalação e configuração finalizadas!");
 }
 

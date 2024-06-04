@@ -1,12 +1,6 @@
-<header [style.backgroundColor]="bgColor">
-  <div class="container">
-    <img [src]="icon" alt="Logo" class="logo" *ngIf="icon">
-    <nav>
-      <ul>
-        <li *ngFor="let item of navItems">
-          <a [href]="item.href">{{ item.label }}</a>
-        </li>
-      </ul>
-    </nav>
+<div class="header">
+  <a href="#default" class="logo">{{ logo }}</a>
+  <div class="header-right">
+    <a *ngFor="let item of navItems" [class.active]="item.active" [href]="item.href">{{ item.label }}</a>
   </div>
-</header>
+</div>
